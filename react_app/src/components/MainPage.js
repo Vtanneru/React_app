@@ -1,18 +1,19 @@
-import React, {useState}  from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { Component, useState}  from 'react';
 import './MainPage.css';
 import { statesData } from '../data/statesData';
 import { countiesData } from '../data/countiesData';
 import { countriesData } from '../data/countriesData';
+import SecondPage from '../components/SecondPage';
 
 const MainPage = () => {
-  const navigate = useNavigate();
   const [name, setName] = useState({ first: '', middle: '', last: '' });
   const [address, setAddress] = useState({ line1: '', line2: '', city: '', state: '', zip: '' });
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [residency, setResidency] = useState({ state: '', county: '' });
   const [citizenship, setCitizenship] = useState('');
+  const [isSecondRendered, setIsSecondRedered]= useState(false);
+  const [mainPageData, setMainPageData] = useState({})
 
   const handleNameChange = (event) => {
     const { name, value } = event.target;
@@ -43,16 +44,18 @@ const MainPage = () => {
 
   const handleNext = () => {
     const data = {
-      name,
-      address,
-      email,
-      gender,
-      residency,
-      citizenship,
-    };
-
-    navigate('/second-page', { state: { formData: data } });
-  };
+        name,
+        address,
+        email,
+        gender,
+        residency,
+        citizenship,
+    }
+    setMainPageData(data)
+    if(data){
+      setIsSecondRedered(true);
+    }
+ };
 
   const handleReset = () => {
     setName({ first: '', middle: '', last: '' });
@@ -64,7 +67,8 @@ const MainPage = () => {
   };
 
 return (
-    <div className="container">
+  <>{isSecondRendered && <SecondPage data={mainPageData} />}
+   {!isSecondRendered && <div className="container">
       <h1 className="heading">React App</h1>
       <h2 className="subheading">Your Information</h2>
       <div className="form-section">
@@ -204,7 +208,8 @@ return (
         <button onClick={handleNext}>Next</button>
       </div>
       </div>
-    </div>
+    </div>}
+    </>
   );
 };
 
